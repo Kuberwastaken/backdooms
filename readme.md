@@ -16,7 +16,7 @@
 
 ## 🚀 Project Overview
 
-**The Backdooms** is a compressed, self-extracting HTML game inspired by DOOM 1993 and The Backrooms that can be launched and played in a web browser directly from a QR code.
+**The Backdooms** is a compressed, self-extracting and infinitely generating HTML game inspired by DOOM 1993 and The Backrooms that can be launched and played in a web browser directly from a QR code.
 
 This project was a week-long study I performed designed to push the limits of QR code storage and compression, to demonstrate an innovative method of hosting lightweight web applications entirely within a QR code.
 
