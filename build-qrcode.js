@@ -1,0 +1,95 @@
+// build-qrcode.js
+
+const fs = require('fs');
+const zlib = require('zlib');
+const QRCode = require('qrcode');
+
+// Your updated, smaller game HTML:
+const gameHTML = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>THE BACKDOOMS</title><style>body{margin:0;overflow:hidden;background:#000;cursor:crosshair}canvas{width:100vw;height:100vh}</style></head><body><canvas id=c></canvas><script>
+M=Math.cos,N=Math.sin,P=Math.hypot,T=Math.atan2;c=document.getElementById("c");c.width=320,c.height=240,h=c.getContext("2d");x=4,y=4,a=0,H=100,am=25,rc=0,fl=0;
+f=(i,j)=>(Math.abs(i-4)<4&&Math.abs(j-4)<4)?"0":((((i+1000)%7)==3||((j+1000)%7)==3)?"0":(Math.random()<.05?"1":"0"));
+e=[{x:5,y:4,h:100},{x:4,y:5,h:100}],k={};onkeydown=e=>k[e.key]=1;onkeyup=e=>k[e.key]=0;
+onclick=_=>{if(am){am--;fl=2;rc=.2;e.forEach(o=>{d=P(o.x-x,o.y-y),r=T(o.y-y,o.x-x);if(d<5&&Math.abs(r-a)<.3)o.h-=50})}};
+R=_=>{
+  rc=Math.max(0,rc-.02);fl=Math.max(0,fl-1);e=e.filter(o=>o.h>0);
+  h.fillStyle="#000";h.fillRect(0,0,320,240);
+  k.ArrowLeft&&(a-=.1);k.ArrowRight&&(a+=.1);m=.1;
+  (k.ArrowUp||k.w)&&(nx=x+M(a)*m,ny=y+N(a)*m,f(~~nx,~~ny)!="1"&&(x=nx,y=ny));
+  (k.ArrowDown||k.s)&&(nx=x-M(a)*m,ny=y-N(a)*m,f(~~nx,~~ny)!="1"&&(x=nx,y=ny));
+  if((k.ArrowUp||k.w||k.ArrowDown||k.s||k.ArrowLeft||k.ArrowRight)&&e.length<10&&Math.random()<.01){
+    X=x+M(t=Math.random()*6.28)*(1+Math.random()),
+    Y=y+N(t)*(1+Math.random()),
+    f(~~X,~~Y)=="0"&&e.push({x:X,y:Y,h:100})
+  }
+  Math.random()<.005&&am<25&&am++;
+  e.forEach(o=>{
+    d=P(dx=x-o.x,dy=y-o.y);
+    d>0.2&&(nx=o.x+dx/d*.0015,ny=o.y+dy/d*.0015,f(~~nx,~~ny)!="1"&&(o.x=nx,o.y=ny));
+    d<.5&&(H--,fl=2)
+  });
+  w=[];
+  for(i=0;i<320;i++){
+    r=a+Math.atan((i-160)/160),
+    rx=x,ry=y,s=N(r),c=M(r),d=0;
+    while(d<20&&f(~~rx,~~ry)!="1"){
+      rx+=c*.1;ry+=s*.1;d+=.1
+    }
+    d*=M(r-a);
+    w[i]=d;
+    h2=Math.min(240,240/d);
+    g=Math.min(255,200/d)|0;
+    h.fillStyle=\`rgb(\${g},\${g},\${g})\`;
+    h.fillRect(i,120-h2/2+rc*20,1,h2)
+  }
+  e.forEach(o=>{
+    d=P(o.x-x,o.y-y),
+    r=T(o.y-y,o.x-x)-a;
+    if(Math.abs(r)<1.2){
+      sz=80/d;
+      px=160+r*160;
+      if(px>=0&&px<320&&d<w[~~px]*1.1){
+        h.fillStyle=o.h>50?"#400":"#800";
+        h.fillRect(px-sz/2,120-sz/2+rc*20,sz,sz*1.5);
+        h.fillStyle="#f00";
+        h.fillRect(px-sz/4,120-sz/2+rc*20,sz/8,sz/4);
+        h.fillRect(px+sz/4,120-sz/2+rc*20,sz/8,sz/4)
+      }
+    }
+  });
+  fl&&(h.fillStyle="#FFA500",h.fillRect(140,160+rc*20,40,20));
+  h.fillStyle="#f00";h.fillRect(10,10,H,10);
+  h.fillStyle="#ff0";h.fillRect(10,25,am*4,5);
+  h.fillStyle="#fff";h.font="7px Arial";
+  h.fillText("HP",10,7);
+  h.fillText("AMMO:"+am,10,28);
+  h.textAlign="right";
+  h.fillText("<3 Kuber Mehta",315,235);
+  h.textAlign="left";
+  H>0?requestAnimationFrame(R):(h.fillStyle="#f00",h.font="20px Arial",h.textAlign="center",h.fillText("GAME OVER",160,120))
+};
+R();
+</script></body></html>`;
+
+// Compress the game HTML using deflate-raw (omitting extra headers)
+const compressed = zlib.deflateRawSync(gameHTML);
+
+// Base64‑encode the compressed game bytes
+const b64Compressed = compressed.toString('base64');
+
+// Build a loader HTML that decompresses and writes the game HTML
+const loaderHTML = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Loader</title><style>body{margin:0;overflow:hidden}</style></head><body><script>
+(async()=>{const b="${b64Compressed}";const c=Uint8Array.from(atob(b),x=>x.charCodeAt(0));const ds=new DecompressionStream('deflate-raw');const st=new Response(c).body.pipeThrough(ds);const h=await new Response(st).text();document.open();document.write(h);document.close();})();
+</script></body></html>`;
+
+// Base64‑encode the loader HTML to form a data URL
+const loaderHTMLBase64 = Buffer.from(loaderHTML, 'utf8').toString('base64');
+const dataURL = `data:text/html;base64,${loaderHTMLBase64}`;
+
+console.log("Final Data URL:");
+console.log(dataURL);
+
+// Generate a QR code using a lower error correction level
+QRCode.toFile('qrcode.png', dataURL, { errorCorrectionLevel: 'L' }, function (err) {
+  if (err) throw err;
+  console.log('QR code saved as qrcode.png');
+});

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><title>Mini DOOM</title><style>body{margin:0;overflow:hidden;background:#000;cursor:crosshair}canvas{width:100vw;height:100vh}</style></head><body><canvas id=c></canvas><script>
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>The Backdooms</title><style>body{margin:0;overflow:hidden;background:#000;cursor:crosshair}canvas{width:100vw;height:100vh}</style></head><body><canvas id=c></canvas><script>
     c=document.getElementById("c");c.width=320,c.height=240,h=c.getContext("2d");x=4,y=4,a=0,hp=100,ammo=25,recoil=0;
     f=(i,j)=>(Math.abs(i-4)<3&&Math.abs(j-4)<3)?"0":(n=Math.sin(i*12.9898+j*78.233)*43758.5453+1e4,n-=n|0,n<.15?"1":"0");
     e=[{x:6,y:4,h:100},{x:4,y:6,h:100},{x:6,y:6,h:100}],k={},flash=0;

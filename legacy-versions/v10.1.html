@@ -1,4 +1,6 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><title>Mini DOOM</title><style>body{margin:0;overflow:hidden;background:#000;cursor:crosshair}canvas{width:100vw;height:100vh}</style></head><body><canvas id=c></canvas><script>
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>The Backdooms</title><style>
+    body{margin:0;overflow:hidden;background:#000;cursor:crosshair}canvas{width:100vw;height:100vh}
+    </style></head><body><canvas id=c></canvas><script>
     M=Math.cos,N=Math.sin,P=Math.hypot,T=Math.atan2,A=Math.atan;
     c=document.getElementById("c");c.width=320,c.height=240,h=c.getContext("2d");
     x=4,y=4,a=0,H=100,am=25,rc=0,fl=0,SEED=Math.random()*100;
@@ -12,7 +14,7 @@
      k.ArrowLeft&&(a-=.1);k.ArrowRight&&(a+=.1);m=.1;
      (k.ArrowUp||k.w)&&(nx=x+M(a)*m,ny=y+N(a)*m,f(~~nx,~~ny)!="1"&&(x=nx,y=ny));
      (k.ArrowDown||k.s)&&(nx=x-M(a)*m,ny=y-N(a)*m,f(~~nx,~~ny)!="1"&&(x=nx,y=ny));
-     if(e.length<10&&Math.random()<.005){t=Math.random()*6.283,Rdist=3+Math.random()*2,X=x+M(t)*Rdist,Y=y+N(t)*Rdist;if(f(~~X,~~Y)=="0")e.push({x:X,y:Y,h:100})}
+     if(e.length<10&&Math.random()<.01){t=Math.random()*6.283,Rdist=3+Math.random()*2,X=x+M(t)*Rdist,Y=y+N(t)*Rdist;if(f(~~X,~~Y)=="0")e.push({x:X,y:Y,h:100})}
      if(Math.random()<.005&&am<25)am++;
      e.forEach(o=>{
       dx=x-o.x,dy=y-o.y,di=P(dx,dy);
