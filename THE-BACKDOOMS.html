@@ -1,10 +1,9 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><title>THE BACKDOOMS</title><style>
   body{margin:0;overflow:hidden;background:#000;cursor:crosshair}canvas{width:100vw;height:100vh}
   </style></head><body><canvas id=c></canvas>
-  <!-- not part of original game, just for GitHub hosted version -->
+    // Only for the GitHub hosted version
   <audio id="bgm" loop><source src="public/Game-Music.mp3" type="audio/mpeg"></audio>
   <script>
-  // not part of original game, just for GitHub hosted version
   document.addEventListener('click',()=>document.getElementById('bgm').play().catch(e=>0));
   
   M=Math.cos,N=Math.sin,P=Math.hypot,T=Math.atan2,A=Math.atan;
@@ -63,9 +62,11 @@
     h.fillText("AMMO:"+am,10,28);
     h.textAlign="right";h.fillText("Made with <3 KuberWasTaken",315,235);
     h.textAlign="left";
-    H>0?requestAnimationFrame(R):(h.fillStyle="#000a",h.fillRect(0,0,320,240),
+    H>0?(requestAnimationFrame(R)):(h.fillStyle="#000a",h.fillRect(0,0,320,240),
       h.fillStyle="#f00",h.font="20px Arial",h.textAlign="center",
-      h.fillText("GAME OVER",160,110),h.fillText("Press F5",160,130))
+      h.fillText("GAME OVER",160,110),h.fillText("Press F5",160,130),
+      // Only for the GitHub hosted version
+      document.getElementById('bgm').playbackRate=0.3)
   };
   R();
   </script></body></html>
