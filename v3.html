@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Mini DOOM</title>
+<style>
+body{margin:0;overflow:hidden;background:#000;cursor:crosshair}
+canvas{width:100vw;height:100vh}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+c=document.querySelector('#c');
+c.width=320;c.height=240;
+h=c.getContext('2d');
+x=3;y=3;a=0;hp=100;
+// Procedurally generated map using a simple pattern
+gM=i=>[..."1"+"0".repeat(98)+"1"].map((c,j)=>j%10==0||j%10==9||i==0||i==9?'1':c);
+m=[...Array(10)].map((_,i)=>gM(i));
+// Randomly place enemies
+e=[...Array(8)].map(_=>({x:2+Math.random()*6,y:2+Math.random()*6,h:100}));
+k={};
+onkeydown=e=>k[e.key]=1;
+onkeyup=e=>k[e.key]=0;
+onclick=S;
+function S(){
+  h.fillStyle='#ff0';
+  h.fillRect(0,0,320,240);
+  e.forEach(m=>{
+    d=Math.hypot(m.x-x,m.y-y);
+    r=Math.atan2(m.y-y,m.x-x);
+    if(d<5&&Math.abs(r-a)<.3){
+      m.h-=50;
+      h.fillStyle='#f00';
+      h.fillRect(0,0,320,240);
+    }
+  });
+}
+R=_=>{
+h.fillStyle='#000';
+h.fillRect(0,0,320,240);
+if(k.ArrowLeft)a-=.1;
+if(k.ArrowRight)a+=.1;
+mv=.1;
+if(k.ArrowUp||k.w){nx=x+Math.cos(a)*mv;ny=y+Math.sin(a)*mv;if(m[~~ny][~~nx]!='1'){x=nx;y=ny}}
+if(k.ArrowDown||k.s){nx=x-Math.cos(a)*mv;ny=y-Math.sin(a)*mv;if(m[~~ny][~~nx]!='1'){x=nx;y=ny}}
+for(i=0;i<320;i++){
+r=a+Math.atan((i-160)/160);
+rx=x;ry=y;s=Math.sin(r);c=Math.cos(r);d=0;
+while(d<8&&m[~~ry][~~rx]!='1'){rx+=c*.05;ry+=s*.05;d+=.05}
+d*=Math.cos(r-a);h2=Math.min(240,120/d);
+g=Math.min(255,128/d)|0;
+h.fillStyle=`rgb(${g},${g},${g})`;
+h.fillRect(i,120-h2/2,1,h2)
+}
+e.forEach(m=>{
+if(m.h<=0)return;
+d=Math.hypot(m.x-x,m.y-y);
+if(d<.5)hp-=1;
+r=Math.atan2(m.y-y,m.x-x)-a;
+if(Math.abs(r)<1.2){
+sz=80/d;px=160+r*160;
+h.fillStyle='#400';
+h.fillRect(px-sz/2,120-sz,sz,sz*2);
+h.fillStyle='#f00';
+h.fillRect(px-sz/4,120-sz/2,sz/8,sz/8);
+h.fillRect(px+sz/4,120-sz/2,sz/8,sz/8);
+}});
+h.fillStyle='#444';
+h.fillRect(140,180,40,60);
+h.fillStyle='#f00';
+h.fillRect(10,10,hp,10);
+if(hp>0)requestAnimationFrame(R);
+else{
+h.fillStyle='#000a';
+h.fillRect(0,0,320,240);
+h.fillStyle='#f00';
+h.font='20px Arial';
+h.fillText('GAME OVER - F5 to retry',70,120)
+}}
+R()
+</script>
+</body>
+</html>

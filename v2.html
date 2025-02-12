@@ -1,0 +1,119 @@
+<canvas id=c></canvas>
+<script>
+c=document.querySelector('#c');
+c.width=320;c.height=240;
+h=c.getContext('2d');
+x=3;y=3;a=0;hp=100;ammo=100;
+m=[
+"11111111",
+"10000001",
+"10100101",
+"10000001",
+"10100101",
+"10000001",
+"10100101",
+"11111111"
+];
+e=[{x:6,y:4,h:100},{x:4,y:6,h:100},{x:6,y:6,h:100}];
+k={};
+onkeydown=e=>{k[e.key]=1;if(e.key==' ')S()};
+onkeyup=e=>k[e.key]=0;
+S=_=>{
+  if(ammo<=0)return;
+  ammo--;
+  // Flash effect
+  h.fillStyle='rgba(255,255,0,0.3)';
+  h.fillRect(0,0,320,240);
+  // Gun recoil animation
+  weaponY=190;
+  setTimeout(_=>weaponY=180,100);
+  
+  e.forEach(m=>{
+    d=Math.hypot(m.x-x,m.y-y);
+    r=Math.atan2(m.y-y,m.x-x);
+    if(d<3&&Math.abs(r-a)<.8){
+      m.h-=50;
+      // Hit feedback
+      h.fillStyle='#f00';
+      h.fillRect(0,0,320,240);
+    }
+  });
+}
+
+R=_=>{
+  h.fillStyle='#000';
+  h.fillRect(0,0,320,240);
+  
+  if(k.ArrowLeft)a-=.1;
+  if(k.ArrowRight)a+=.1;
+  if(k.ArrowUp){
+    nx=x+Math.cos(a)*.1;
+    ny=y+Math.sin(a)*.1;
+    if(m[~~ny][~~nx]!='1'){x=nx;y=ny}
+  }
+  
+  // Ray casting with gray walls
+  for(i=0;i<320;i++){
+    r=a+Math.atan((i-160)/160);
+    rx=x;ry=y;
+    s=Math.sin(r);c=Math.cos(r);
+    d=0;
+    while(d<8&&m[~~ry][~~rx]!='1'){
+      rx+=c*.05;
+      ry+=s*.05;
+      d+=.05;
+    }
+    d=d*Math.cos(r-a);
+    h2=Math.min(240,120/d);
+    // Gray walls with depth shading
+    shade=Math.min(255,128/d);
+    h.fillStyle=`rgb(${shade},${shade},${shade})`;
+    h.fillRect(i,120-h2/2,1,h2);
+  }
+  
+  // Simplified enemy rendering
+  e.forEach(m=>{
+    if(m.h<=0)return;
+    d=Math.hypot(m.x-x,m.y-y);
+    if(d<.5)hp-=1;
+    r=Math.atan2(m.y-y,m.x-x)-a;
+    sz=100/d;
+    if(Math.abs(r)<1.2){
+      // Simple shadow-like enemy shape
+      h.fillStyle=`rgba(0,0,0,${1/d})`;
+      h.beginPath();
+      px=160+r*160;
+      py=120;
+      h.fillRect(px-sz/2,py-sz,sz,sz*2);
+    }
+  });
+  
+  // Weapon with recoil
+  h.fillStyle='#444';
+  h.fillRect(140,weaponY||180,40,60);
+  
+  // Health and ammo bars
+  h.fillStyle='#f00';
+  h.fillRect(10,10,hp,10);
+  h.fillStyle='#ff0';
+  h.fillRect(10,25,ammo,10);
+  
+  if(hp>0)requestAnimationFrame(R);
+  else{
+    // Improved game over screen
+    h.fillStyle='rgba(0,0,0,0.8)';
+    h.fillRect(0,0,320,240);
+    h.fillStyle='#f00';
+    h.font='40px Arial';
+    h.fillText('GAME OVER',80,120);
+    h.font='20px Arial';
+    h.fillText('Press F5 to restart',100,160);
+  }
+}
+R();
+c.style.width='100vw';
+c.style.height='100vh';
+c.style.background='#000';
+document.body.style.margin='0';
+document.body.style.overflow='hidden';
+</script>

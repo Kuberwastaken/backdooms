@@ -1,0 +1,74 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Mini DOOM</title><style>body{margin:0;overflow:hidden;background:#000;cursor:crosshair}canvas{width:100vw;height:100vh}</style></head><body><canvas id=c></canvas><script>
+    c=document.getElementById("c");c.width=320,c.height=240,h=c.getContext("2d");x=4,y=4,a=0,hp=100,ammo=25,recoil=0;
+    f=(i,j)=>(Math.abs(i-4)<3&&Math.abs(j-4)<3)?"0":(n=Math.sin(i*12.9898+j*78.233)*43758.5453+1e4,n-=n|0,n<.15?"1":"0");
+    e=[{x:6,y:4,h:100},{x:4,y:6,h:100},{x:6,y:6,h:100}],k={},flash=0;
+    onkeydown=e=>k[e.key]=1;onkeyup=e=>k[e.key]=0;
+    onclick=_=>{
+     if(ammo>0){
+      ammo--;
+      flash=2;
+      recoil=.2;
+      h.fillStyle="#FFA500";
+      h.fillRect(140,160,40,20);
+      e.forEach(o=>{
+       d=Math.hypot(o.x-x,o.y-y),r=Math.atan2(o.y-y,o.x-x);
+       d<5&&Math.abs(r-a)<.3&&(o.h-=50)
+      })
+     }
+    };
+    p=[];
+    R=_=>{
+     recoil=Math.max(0,recoil-.02);
+     flash=Math.max(0,flash-1);
+     e=e.filter(o=>o.h>0),
+     h.fillStyle="#000",h.fillRect(0,0,320,240),
+     k.ArrowLeft&&(a-=.1),k.ArrowRight&&(a+=.1),mv=.1,
+     (k.ArrowUp||k.w)&&((nx=x+Math.cos(a)*mv,ny=y+Math.sin(a)*mv),f(~~nx,~~ny)!="1"&&(x=nx,y=ny)),
+     (k.ArrowDown||k.s)&&((nx=x-Math.cos(a)*mv,ny=y-Math.sin(a)*mv),f(~~nx,~~ny)!="1"&&(x=nx,y=ny));
+     e.forEach(o=>{
+      if(o.h>0){
+       dx=x-o.x,dy=y-o.y,dist=Math.hypot(dx,dy);
+       if(dist>0.2){nx=o.x+dx/dist*.001,ny=o.y+dy/dist*.001;
+        f(~~nx,~~ny)!="1"&&(o.x=nx,o.y=ny)
+       }
+       if(dist<.5){hp--,flash=2}
+       if(o.h<=50&&Math.random()<.02)p.push({x:o.x,y:o.y,t:20})
+      }
+     });
+     Math.random()<.005&&ammo<25&&ammo++;
+     e.length<40&&Math.random()<.1&&(X=x+(Math.random()*30-15),Y=y+(Math.random()*30-15),f(~~X,~~Y)=="0"&&e.push({x:X,y:Y,h:100}));
+     w=[];
+     for(i=0;i<320;i++){
+      r=a+Math.atan((i-160)/160),rx=x,ry=y,s=Math.sin(r),c=Math.cos(r),d=0;
+      while(d<20&&f(~~rx,~~ry)!="1"){rx+=c*.1,ry+=s*.1,d+=.1}
+      d*=Math.cos(r-a),w[i]=d,h2=Math.min(240,240/d),g=Math.min(255,200/d)|0,
+      h.fillStyle=`rgb(${g},${g},${g})`,h.fillRect(i,120-h2/2+recoil*20,1,h2)
+     }
+     e.forEach(o=>{
+      d=Math.hypot(o.x-x,o.y-y),
+      r=Math.atan2(o.y-y,o.x-x)-a;
+      if(Math.abs(r)<1.2){
+       sz=80/d,px=160+r*160;
+       if(px>=0&&px<320&&d<w[~~px]){
+        h.fillStyle=o.h>50?"#400":"#800",h.fillRect(px-sz/2,120-sz/2+recoil*20,sz,sz),
+        h.fillStyle="#f00",h.fillRect(px-sz/4,120-sz/2+recoil*20,sz/8,sz/8),
+        h.fillRect(px+sz/4,120-sz/2+recoil*20,sz/8,sz/8),
+        h.fillStyle="#900",h.fillRect(px-sz/2,120-sz/2-4+recoil*20,sz,2),
+        h.fillStyle="#0f0",h.fillRect(px-sz/2,120-sz/2-4+recoil*20,sz*(o.h/100),2)
+       }
+      }
+     });
+     p=p.filter(o=>(o.t>0&&(h.fillStyle=`rgba(255,0,0,${o.t/20})`,h.fillRect(160+Math.atan2(o.y-y,o.x-x)*160-10,120-10+recoil*20,20,20),o.t--),o.t>0));
+     h.fillStyle="#444",h.fillRect(140,180+recoil*20,40,60);
+     if(flash)h.fillStyle="#FFA500",h.fillRect(140,160+recoil*20,40,20);
+     h.fillStyle="#f00",h.fillRect(10,10,hp,10);
+     h.fillStyle="#ff0",h.fillRect(10,25,ammo*4,5);
+     h.fillStyle="#fff",h.font="8px Arial",
+     h.fillText("HP",10,8),h.fillText("AMMO: "+ammo,10,23),
+     h.fillText("2 hits/kill",2,235),
+     h.textAlign="right",h.fillText("Made with <3 Kuberwastaken",315,235),
+     hp>0?requestAnimationFrame(R):(h.fillStyle="#000a",h.fillRect(0,0,320,240),
+      h.fillStyle="#f00",h.font="20px Arial",h.fillText("GAME OVER - F5 to retry",70,120))
+    };
+    R();
+    </script></body></html>

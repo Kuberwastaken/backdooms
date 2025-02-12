@@ -1,0 +1,55 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Mini DOOM</title><style>body{margin:0;overflow:hidden;background:#000;cursor:crosshair}canvas{width:100vw;height:100vh}</style></head><body><canvas id=c></canvas><script>
+    M=Math.cos,N=Math.sin,P=Math.hypot,T=Math.atan2,A=Math.atan;
+    c=document.getElementById("c");c.width=320,c.height=240,h=c.getContext("2d");
+    x=4,y=4,a=0,H=100,am=25,rc=0,fl=0,SEED=Math.random()*100;
+    f=(i,j)=>(Math.abs(i-4)<4&&Math.abs(j-4)<4)?"0":((((i+1000)%7)==3||((j+1000)%7)==3)?"0":(n=N(i*12.9898+j*78.233+SEED)*43758.5453,n-=n|0,n<.05?"1":"0"));
+    e=[{x:6,y:4,h:100},{x:4,y:6,h:100},{x:7,y:4,h:100},{x:4,y:7,h:100}],k={};
+    onkeydown=e=>{k[e.key]=1};onkeyup=e=>{k[e.key]=0};
+    onclick=_=>{if(am){am--;fl=2;rc=.2;h.fillStyle="#FFA500";h.fillRect(140,160,40,20);e.forEach(o=>{d=P(o.x-x,o.y-y),r=T(o.y-y,o.x-x);if(d<5&&Math.abs(r-a)<.3)o.h-=50})}};
+    R=_=>{
+     rc=Math.max(0,rc-.02);fl=Math.max(0,fl-1);e=e.filter(o=>o.h>0);
+     h.fillStyle="#000";h.fillRect(0,0,320,240);
+     k.ArrowLeft&&(a-=.1);k.ArrowRight&&(a+=.1);m=.1;
+     (k.ArrowUp||k.w)&&(nx=x+M(a)*m,ny=y+N(a)*m,f(~~nx,~~ny)!="1"&&(x=nx,y=ny));
+     (k.ArrowDown||k.s)&&(nx=x-M(a)*m,ny=y-N(a)*m,f(~~nx,~~ny)!="1"&&(x=nx,y=ny));
+     if(e.length<10&&Math.random()<.01){t=Math.random()*6.283,Rdist=3+Math.random()*2,X=x+M(t)*Rdist,Y=y+N(t)*Rdist;if(f(~~X,~~Y)=="0")e.push({x:X,y:Y,h:100})}
+     if(Math.random()<.005&&am<25)am++;
+     e.forEach(o=>{
+      dx=x-o.x,dy=y-o.y,di=P(dx,dy);
+      di>0.2&&(nx=o.x+dx/di*.001,ny=o.y+dy/di*.001,f(~~nx,~~ny)!="1"&&(o.x=nx,o.y=ny));
+      di<.5&&(H--,fl=2)
+     });
+     w=[];
+     for(i=0;i<320;i++){
+      r=a+A((i-160)/160),rx=x,ry=y,s=N(r),c=M(r),d=0;
+      while(d<20&&f(~~rx,~~ry)!="1"){rx+=c*.1;ry+=s*.1;d+=.1}
+      d*=M(r-a);w[i]=d;h2=Math.min(240,240/d);g=Math.min(255,200/d)|0;
+      h.fillStyle="rgb("+g+","+g+","+g+")";h.fillRect(i,120-h2/2+rc*20,1,h2)
+     }
+     e.forEach(o=>{
+      d=P(o.x-x,o.y-y),r=T(o.y-y,o.x-x)-a;
+      if(Math.abs(r)<1.2){
+       sz=80/d;px=160+r*160;
+       if(px>=0&&px<320&&d<w[~~px]*1.1){
+        h.fillStyle=o.h>50?"#400":"#800";h.fillRect(px-sz/2,120-sz/2+rc*20,sz,sz*1.5);
+        h.fillStyle="#f00";h.fillRect(px-sz/4,120-sz/2+rc*20,sz/8,sz/4);
+        h.fillRect(px+sz/4,120-sz/2+rc*20,sz/8,sz/4);
+        h.fillStyle="#900";h.fillRect(px-sz/2,120-sz/2-4+rc*20,sz,2);
+        h.fillStyle="#0f0";h.fillRect(px-sz/2,120-sz/2-4+rc*20,sz*(o.h/100),2)
+       }
+      }
+     });
+     h.fillStyle="#444";h.fillRect(140,180+rc*20,40,60);
+     fl&&(h.fillStyle="#FFA500",h.fillRect(140,160+rc*20,40,20));
+     h.fillStyle="#f00";h.fillRect(10,10,H,10);
+     h.fillStyle="#ff0";h.fillRect(10,25,am*4,5);
+     h.fillStyle="#fff";h.font="7px Arial";
+     h.fillText("HP",10,7);h.fillText("AM:"+am,10,28);h.fillText("2h/k",2,235);
+     h.textAlign="right";h.fillText("Made w/<3 Kub",315,235);h.textAlign="left";
+     H>0?requestAnimationFrame(R):(h.fillStyle="#000a",h.fillRect(0,0,320,240),
+      h.fillStyle="#f00",h.font="20px Arial",h.textAlign="center",h.fillText("GAME OVER",160,110),
+      h.fillText("F5 to retry",160,130))
+    };
+    R();
+    </script></body></html>
+    
