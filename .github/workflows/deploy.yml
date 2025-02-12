@@ -23,20 +23,14 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Create deployment directory
+      - name: Remove all files except THE-BACKDOOMS.html
         run: |
-          mkdir public
-          if [ -f THE-BACKDOOMS.html ]; then
-            cp THE-BACKDOOMS.html public/
-          else
-            echo "THE-BACKDOOMS.html not found!"
-            exit 1
-          fi
+          find . -type f ! -name 'THE-BACKDOOMS.html' -delete
 
-      - name: Upload artifact
+      - name: Upload artifact (Only THE-BACKDOOMS.html)
         uses: actions/upload-pages-artifact@v3
         with:
-          path: public
+          path: .
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
