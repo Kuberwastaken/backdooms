@@ -24,6 +24,8 @@ This project was a week-long study I performed designed to push the limits of QR
 
 <p align="center">
     <a href="https://kuberwastaken.github.io/backdooms">Play a slightly less compressed version of this game here</a>
+    <br style="font-size: small; font-weight: lighter;">
+    <span style="font-weight: lighter;">Yes, it's 8bit Undertale Music There</span>
 </p>
 
 ---
@@ -135,5 +137,9 @@ It would make me EXTREMELY happy to see other QR games or even seeing better ver
 ---
 
 ## 🙌 Credits
-Developed by **Kuber Mehta** :)
+-  id Software for Developing DOOM
+- matttkc for putting this idea in my head 5 years ago
+- Toby Fox for the amazing music in Undertale, this game's GitHub hosted version uses an 8 bit version of Bonetrousle
+
+ Developed by **Kuber Mehta** :)
 
