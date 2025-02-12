@@ -1,4 +1,5 @@
-# The Backdooms: DOOM in a QR Code
+<h1 align="center">The Backdooms: DOOM in a QR Code</h1>
+
 
 <p align="center">
     <img src="qrcode.png" alt="QR Code for The Backdooms">
