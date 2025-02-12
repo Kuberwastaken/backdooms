@@ -1,4 +1,4 @@
-<h1 align="center">The Backdooms: DOOM in a QR Code</h1>
+<h1 align="center">The Backdooms: Running DOOM on a QR Code</h1>
 
 
 <p align="center">
