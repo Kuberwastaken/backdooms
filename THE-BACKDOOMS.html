@@ -13,8 +13,17 @@
   n-=n|0,n<.05?"1":"0"));
   e=[{x:5,y:4,h:100},{x:4,y:5,h:100}],k={};
   onkeydown=e=>{k[e.key]=1};onkeyup=e=>{k[e.key]=0};
-  onclick=_=>{if(am){am--;fl=2;rc=.2;h.fillStyle="#FFA500";h.fillRect(140,160,40,20);
-  e.forEach(o=>{d=P(o.x-x,o.y-y),r=T(o.y-y,o.x-x);d<5&&Math.abs(r-a)<.3&&(o.h-=50)})}};
+  onclick=_=>{
+    if(am){
+      am--;fl=2;rc=.2;
+      h.fillStyle="#FFA500";h.fillRect(140,160,40,20);
+      e.forEach(o=>{
+        d=P(o.x-x,o.y-y), r=T(o.y-y,o.x-x)-a;
+        r = r>Math.PI ? r-2*Math.PI : r<-Math.PI ? r+2*Math.PI : r;
+        d<5&&Math.abs(r)<.3&&(o.h-=50)
+      })
+    }
+  };
   R=_=>{
     rc=Math.max(0,rc-.02);fl=Math.max(0,fl-1);e=e.filter(o=>o.h>0);
     h.fillStyle="#000";h.fillRect(0,0,320,240);
@@ -42,6 +51,7 @@
     }
     e.forEach(o=>{
       d=P(o.x-x,o.y-y),r=T(o.y-y,o.x-x)-a;
+      r = r>Math.PI ? r-2*Math.PI : r<-Math.PI ? r+2*Math.PI : r;
       if(Math.abs(r)<1.2){
         sz=80/d,px=160+r*160;
         if(px>=0 && px<320 && d<w[~~px]*1.1){
