@@ -34,7 +34,7 @@ This project was a week-long study I performed designed to push the limits of QR
 
 ✅ **Fully Offline:** No internet connection is required to play the game after scanning the QR code. The URL basically has the ENTIRE code to the game
 
-✅ **Extreme Compression:** Utilizes Gzip compression along with base64 encoding to make the final result extremely compressed.
+✅ **Extreme Compression:** Utilizes a combination of Zlib compression with Gzip Decompression stream along with base64 encoding to make the final result extremely compressed.
 
 ✅ **Self-Extracting Webpage:** Uses the `DecompressionStream` API to dynamically decompress and execute the game within the browser.
 
@@ -83,24 +83,25 @@ Enjoy *The Backdooms* without needing to download or install anything!
 ### Compression Workflow
 ```mermaid
 flowchart TD
-  A[Start: Read Input HTML] -->|HTML Content| B[Compress with Gzip]
-  B -->|Max Compression - Level 9| C[Base64 Encode Data]
-  C --> D[Embed in Self-Extracting HTML Wrapper]
-  D --> E[Convert to Data URI]
-  E --> F{Can the Data Fit in a QR Code?}
-  F -->|Yes| G[Generate QR Code]
-  F -->|No: Exceeds QR Version 40| H[Use Maximum Allowed QR Version]
-  H --> I{Does it Fit with Low Redundancy?}
-  I -->|Yes| G
-  I -->|No| J[Error: Data Too Large]
-  J --> M[Make the HTML smaller]
-  G --> K[Display QR Code for Scanning]
-  K --> L[Done]
-```
+    A[Read Input HTML] --> B[Compress with Zlib]
+    B -->|wbits=15| C[Base64 Encode]
+    C --> D[Embed in HTML Wrapper]
+    
+    subgraph browser[Browser Processing]
+        D --> E[DecompressionStream 'gzip']
+        E --> F{Format Mismatch}
+    end
+    
+    F --> G[Convert to Data URI]
+    G --> H{Fits QR Code?}
+    H -->|Yes| I[Generate QR]
+    H -->|No| J[Reduce HTML Size]
+    J --> A
+```    
 
 **Read Input HTML:** The process starts by reading the given HTML content from a file or input source.
 
-**Gzip Compression:** The HTML is compressed using Gzip with the highest compression level (compresslevel=9).
+**Zlib Compression + GZip decompression:** The HTML is compressed using Zlib and uses Decompressionstream from GZip for best compression
 
 **Base64 Encoding:** The compressed data is encoded in Base64, ensuring that it remains text-based and can be embedded in an HTML file safely.
 
