@@ -5,7 +5,7 @@
     <img src="qrcode.png" alt="QR Code for The Backdooms">
 </p>
 <p align="center" style="font-size: small; font-weight: lighter;">
-    Yes, this is literally the entire game.
+    Yes, this is literally the entire game. You can <a href="https://scanqr.org/">scan it</a> to play.
 </p>
 
 <p align="center">
