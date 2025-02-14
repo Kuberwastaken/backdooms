@@ -63,11 +63,11 @@ pip install qrcode[pil]
 ### 1️⃣ Convert Your Game to a QR Code
 Run the script with the following command:
 ```bash
-python3 finalqr.py <your-game.html> <output-qrcode.png>
+python3 QRGEN.py <your-game.html> <output-qrcode.png>
 ```
 Example:
 ```bash
-python3 finalqr.py EVEN-SMALLER-SLAMMER-BACKROOMS.html qrcode.png
+python3 QRGEN.py EVEN-SMALLER-SLAMMER-BACKROOMS.html qrcode.png
 ```
 
 ### 2️⃣ Scan the QR Code
