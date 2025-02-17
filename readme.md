@@ -127,7 +127,7 @@ If not, the process terminates with an error message indicating that the data is
 
 ---
 ## Understand the Frustration and Trial and Error
-Read about the development journey on my blog [MindDump](https://kuberwastaken.github.io/blog/Projects/How-I-Managed-To-Fit-Doom-In-A-QR-Code)
+Read about the development journey on my blog [MindDump](https://kuberwastaken.github.io/blog/Projects/How-I-Managed-To-Get-Doom-In-A-QR-Code)
 
 ---
 
