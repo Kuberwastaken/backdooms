@@ -11,12 +11,12 @@
   
   M=Math.cos,N=Math.sin,P=Math.hypot,T=Math.atan2,A=Math.atan;
   c=document.getElementById("c");c.width=320,c.height=240,h=c.getContext("2d");
-  x=4,y=4,a=0,H=100,am=25,rc=0,fl=0,SEED=Math.random()*100;
+  x=4,y=4,a=0,H=100,am=25,rc=0,fl=0,SEED=Math.random()*100,score=0; // score system, only in hosted version
   f=(i,j)=>(Math.abs(i-4)<4&&Math.abs(j-4)<4)?"0":((((i+1e3)%7)==3||((j+1e3)%7)==3)?"0":(n=N(i*12.9898+j*78.233+SEED)*43758.5453,
   n-=n|0,n<.05?"1":"0"));
   e=[{x:5,y:4,h:100},{x:4,y:5,h:100}],k={};
   onkeydown=e=>{k[e.key]=1};onkeyup=e=>{k[e.key]=0};
-  onclick=_=>{if(am){am--;fl=2;rc=.2;h.fillStyle="#FFA500";h.fillRect(140,160,40,20);e.forEach(o=>{d=P(o.x-x,o.y-y),r=T(o.y-y,o.x-x)-a;r=r>Math.PI?r-2*Math.PI:r<-Math.PI?r+2*Math.PI:r;d<5&&Math.abs(r)<.3&&(o.h-=50)})}};
+  onclick=_=>{if(am){am--;fl=2;rc=.2;h.fillStyle="#FFA500";h.fillRect(140,160,40,20);e.forEach(o=>{d=P(o.x-x,o.y-y),r=T(o.y-y,o.x-x)-a;r=r>Math.PI?r-2*Math.PI:r<-Math.PI?r+2*Math.PI:r;d<5&&Math.abs(r)<.3&&(o.h-=50,o.h<=0&&(score++))})}};
   R=_=>{
     rc=Math.max(0,rc-.02);fl=Math.max(0,fl-1);e=e.filter(o=>o.h>0);
     h.fillStyle="#000";h.fillRect(0,0,320,240);
@@ -66,10 +66,10 @@
     h.fillStyle="#f00";h.fillRect(10,10,H,10);
     h.fillStyle="#ff0";h.fillRect(10,25,am*4,5);
     h.fillStyle="#fff";h.font="7px Arial";h.fillText("HP",10,7);
-    h.fillText("AMMO:"+am,10,28);
+    h.fillText("AMMO:"+am,10,28);h.fillText("SCORE:"+score,280,28); // score display, only in hosted version
     h.textAlign="right";h.fillText("Made with <3 KuberWasTaken",315,235);
     h.textAlign="left";
-    H>0?requestAnimationFrame(R):(h.fillStyle="#000a",h.fillRect(0,0,320,240),h.fillStyle="#f00",h.font="20px Arial",h.textAlign="center",h.fillText("GAME OVER",160,110),h.fillText("Press F5",160,130),
+    H>0?requestAnimationFrame(R):(h.fillStyle="#000a",h.fillRect(0,0,320,240),h.fillStyle="#f00",h.font="20px Arial",h.textAlign="center",h.fillText("GAME OVER",160,110),h.fillText("Score: "+score,160,150),h.fillText("Press F5",160,130),
       // Only for the GitHub hosted version
       document.getElementById('bgm').playbackRate=0.3)
   };
