@@ -1,6 +1,16 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><title>THE BACKDOOMS</title><style>
   body{margin:0;overflow:hidden;background:#000;cursor:crosshair}canvas{width:100vw;height:100vh}
+  /* Mobile controls styles - hosted version only */
+  .m{position:fixed;bottom:0;left:0;width:100%;padding:10px;display:none;justify-content:space-between;background:#0006}
+  .b{width:50px;height:50px;background:#444;color:#fff;border:0;border-radius:50%;font-size:20px}
+  .f{background:#800;width:60px;height:60px}
+  @media(pointer:coarse){.m{display:flex}}
   </style></head><body><canvas id=c></canvas>
+  <!-- Mobile controls HTML - hosted version only -->
+  <div class=m>
+    <div style="display:flex;gap:10px"><button class=b id=l>←</button><button class=b id=r>→</button></div>
+    <button class="b f" id=s>FIRE</button>
+  </div>
     // Only for the GitHub hosted version
   <audio id="bgm"><source src="public/Game-Music.mp3" type="audio/mpeg"></audio>
   <script>
@@ -16,6 +26,8 @@
   n-=n|0,n<.05?"1":"0"));
   e=[{x:5,y:4,h:100},{x:4,y:5,h:100}],k={};
   onkeydown=e=>{k[e.key]=1};onkeyup=e=>{k[e.key]=0};
+  // Mobile controls setup - hosted version only
+  'ontouchstart'in window&&(l.ontouchstart=_=>k.ArrowLeft=1,l.ontouchend=_=>k.ArrowLeft=0,r.ontouchstart=_=>k.ArrowRight=1,r.ontouchend=_=>k.ArrowRight=0,s.ontouchstart=onclick);
   onclick=_=>{if(am){am--;fl=2;rc=.2;h.fillStyle="#FFA500";h.fillRect(140,160,40,20);e.forEach(o=>{d=P(o.x-x,o.y-y),r=T(o.y-y,o.x-x)-a;r=r>Math.PI?r-2*Math.PI:r<-Math.PI?r+2*Math.PI:r;d<5&&Math.abs(r)<.3&&(o.h-=50,o.h<=0&&(score++))})}};
   R=_=>{
     rc=Math.max(0,rc-.02);fl=Math.max(0,fl-1);e=e.filter(o=>o.h>0);
