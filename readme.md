@@ -38,7 +38,7 @@ This project was a week-long study I performed (now slightly longer) designed to
 
 ✅ **Self-Extracting Webpage:** Uses the `DecompressionStream` API to dynamically decompress and execute the game within the browser.
 
----
+✅ **Mobile Compatible:** Works on modern mobile browsers that support the Decompressionstream APIs (Edge, Yandex, Opera). <span style="background-color: #22c55e; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75em;">NEW</span>
 
 ## 📦 Installation & Dependencies
 
