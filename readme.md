@@ -41,6 +41,7 @@ This project was a week-long study I performed (now slightly longer) designed to
 ✅ **Extreme Compression:** Utilizes a combination of Zlib compression with Gzip Decompression stream along with base64 encoding to make the final result extremely compressed.
 
 ✅ **Self-Extracting Webpage:** Uses the `DecompressionStream` API to dynamically decompress and execute the game within the browser.
+
 ✅ **Mobile Compatible:** Works on modern mobile browsers that support the Decompressionstream APIs (Edge, Yandex, Opera) `[NEW]`
 
 ## 📦 Installation & Dependencies
