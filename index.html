@@ -1,35 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="refresh" content="0;url=THE-BACKDOOMS.html">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE BACKDOOMS</title>
+    <link rel="icon" href="public/favicon.ico" type="image/x-icon">
+    <meta name="description" content="Running DOOM on a QR Code. A compressed, self-extracting HTML game inspired by DOOM 1993 and The Backrooms.">
+    <meta name="keywords" content="DOOM, QR Code, HTML game, The Backrooms, compressed game, self-extracting HTML">
+    <meta name="author" content="Kuber Mehta">
     <style>
-        body {
+        html, body {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background: #000;
-            color: #fff;
-            text-align: center;
         }
-        a {
-            color: #ff0000;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
     </style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-J14BSQSC78"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-J14BSQSC78');
+    </script>
 </head>
 <body>
-    <div>
-        <h1>Redirecting to THE BACKDOOMS...</h1>
-        <p>If you are not redirected automatically, <a href="THE-BACKDOOMS.html">click here</a>.</p>
-    </div>
+    <iframe src="THE-BACKDOOMS.html"></iframe>
 </body>
 </html>

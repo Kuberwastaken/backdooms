@@ -28,6 +28,10 @@ This project was a week-long study I performed (now slightly longer) designed to
     <span style="font-weight: lighter;">Yes, it's 8bit Undertale Music There</span>
 </p>
 
+<p align="center">
+    <img src="https://cdn.jsdelivr.net/gh/kuberwastaken/backdooms/public/Gameplay-GIF.gif" alt="Gameplay Demo">
+</p>
+
 ---
 
 ## 📜 Features
@@ -37,8 +41,7 @@ This project was a week-long study I performed (now slightly longer) designed to
 ✅ **Extreme Compression:** Utilizes a combination of Zlib compression with Gzip Decompression stream along with base64 encoding to make the final result extremely compressed.
 
 ✅ **Self-Extracting Webpage:** Uses the `DecompressionStream` API to dynamically decompress and execute the game within the browser.
-
-✅ **Mobile Compatible:** Works on modern mobile browsers that support the Decompressionstream APIs (Edge, Yandex, Opera). <span style="background-color: #22c55e; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75em;">NEW</span>
+✅ **Mobile Compatible:** Works on modern mobile browsers that support the Decompressionstream APIs (Edge, Yandex, Opera) `[NEW]`
 
 ## 📦 Installation & Dependencies
 
