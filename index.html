@@ -1,154 +1,35 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><title>THE BACKDOOMS</title><style>
-    body{margin:0;overflow:hidden;background:#000;cursor:crosshair}canvas{width:100vw;height:100vh}
-    /* Mobile controls styles - improved version */
-    .m{position:fixed;bottom:20px;left:0;width:100%;padding:10px;display:none;justify-content:space-between;z-index:100}
-    .b{width:60px;height:60px;background:#444;color:#fff;border:0;border-radius:50%;font-size:20px;opacity:.7;transition:all .2s;box-shadow:0 0 15px rgba(255,255,255,0.2)}
-    .b:active{opacity:1;transform:scale(.95);box-shadow:0 0 20px rgba(255,165,0,0.4)}
-    .f{background:linear-gradient(45deg,#800,#f00);width:80px;height:80px;position:fixed;right:20px;bottom:20px;animation:pulse 2s infinite}
-    .j{position:fixed;left:0;top:0;width:100%;height:100%;touch-action:none;display:none}
-    .js{width:120px;height:120px;background:rgba(255,255,255,0.1);border:3px solid rgba(255,255,255,0.3);border-radius:50%;position:absolute;transition:all .2s;backdrop-filter:blur(5px);box-shadow:0 0 20px rgba(255,255,255,0.15)}
-    .js:active{opacity:1;border-color:rgba(255,255,255,0.5);box-shadow:0 0 30px rgba(255,255,255,0.3)}
-    .jk{width:50px;height:50px;background:rgba(255,255,255,0.7);border-radius:50%;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);transition:all .1s;box-shadow:0 0 10px rgba(255,255,255,0.3)}
-    @keyframes pulse {
-        0% { transform:scale(1); box-shadow:0 0 20px rgba(255,165,0,0.2) }
-        50% { transform:scale(1.05); box-shadow:0 0 30px rgba(255,165,0,0.4) }
-        100% { transform:scale(1); box-shadow:0 0 20px rgba(255,165,0,0.2) }
-    }
-    @media only screen and (pointer:coarse) and (hover:none){.m,.j{display:block}}
-    </style></head><body><canvas id=c></canvas>
-    <!-- Mobile controls HTML - improved version -->
-    <div class=j id=j><div class=js id=js><div class=jk></div></div></div></div>
-    <div class=m>
-      <button class="b f" id=s>FIRE</button>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="refresh" content="0;url=THE-BACKDOOMS.html">
+    <title>THE BACKDOOMS</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #000;
+            color: #fff;
+            text-align: center;
+        }
+        a {
+            color: #ff0000;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Redirecting to THE BACKDOOMS...</h1>
+        <p>If you are not redirected automatically, <a href="THE-BACKDOOMS.html">click here</a>.</p>
     </div>
-      // Only for the GitHub hosted version
-    <audio id="bgm"><source src="public/Game-Music.mp3" type="audio/mpeg"></audio>
-    <script>
-    document.addEventListener('click',()=>document.getElementById('bgm').play().catch(e=>0));
-    // BGM loop playback rate drop - GitHub hosted version only
-    var bgm=document.getElementById('bgm');bgm.removeAttribute('loop');bgm.playbackRate=1;
-    bgm.addEventListener('ended',()=>{bgm.playbackRate=Math.max(0.1,bgm.playbackRate-0.1);bgm.currentTime=0;bgm.play()});
-    
-    M=Math.cos,N=Math.sin,P=Math.hypot,T=Math.atan2,A=Math.atan;
-    c=document.getElementById("c");c.width=320,c.height=240,h=c.getContext("2d");
-    x=4,y=4,a=0,H=100,am=25,rc=0,fl=0,SEED=Math.random()*100,score=0; // score system, only in hosted version
-    f=(i,j)=>(Math.abs(i-4)<4&&Math.abs(j-4)<4)?"0":((((i+1e3)%7)==3||((j+1e3)%7)==3)?"0":(n=N(i*12.9898+j*78.233+SEED)*43758.5453,
-    n-=n|0,n<.05?"1":"0"));
-    e=[{x:5,y:4,h:100},{x:4,y:5,h:100}],k={};
-    onkeydown=e=>{k[e.key]=1};onkeyup=e=>{k[e.key]=0};
-  
-    // Mobile controls setup - improved version
-    if('ontouchstart'in window){
-      let jx=0,jy=0,ji=null,sx=0,sy=0;
-      js.style.display='none';
-      
-      j.ontouchstart=e=>{
-        e.preventDefault();
-        let t=e.touches[0];
-        ji=t.identifier;
-        sx=t.clientX;
-        sy=t.clientY;
-        js.style.display='block';
-        js.style.left=(sx-60)+'px';
-        js.style.top=(sy-60)+'px';
-      };
-      
-      j.ontouchmove=e=>{
-        e.preventDefault();
-        for(let t of e.touches)if(t.identifier===ji){
-          let dx=t.clientX-sx,dy=t.clientY-sy,
-              d=P(dx,dy);
-          if(d>60)dx*=60/d,dy*=60/d;
-          jx=dx/60;jy=dy/40;
-          let jkx=60+dx,jky=60+dy;
-          document.querySelector('.jk').style.transform=`translate(${dx}px,${dy}px)`;
-          break;
-        }
-      };
-      
-      j.ontouchend=e=>{
-        if(!e.touches.length||!Array.from(e.touches).some(t=>t.identifier===ji)){
-          ji=null;jx=0;jy=0;
-          js.style.display='none';
-          document.querySelector('.jk').style.transform='translate(-50%,-50%)';
-        }
-      };
-
-      // Enhanced game loop for mobile
-      let _R=R;
-      R=_=>{
-        k.ArrowLeft=jx<-.3;
-        k.ArrowRight=jx>.3;
-        k.ArrowUp=jy<-.3;
-        k.ArrowDown=jy>.3;
-        _R();
-      };
-
-      s.ontouchstart=e=>{e.preventDefault();onclick()};
-      s.ontouchend=e=>e.preventDefault();
-      
-      // Prevent default touch behaviors
-      document.body.style.touchAction='none';
-      document.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
-    }
-  
-    onclick=_=>{if(am){am--;fl=2;rc=.2;h.fillStyle="#FFA500";h.fillRect(140,160,40,20);e.forEach(o=>{d=P(o.x-x,o.y-y),r=T(o.y-y,o.x-x)-a;r=r>Math.PI?r-2*Math.PI:r<-Math.PI?r+2*Math.PI:r;d<5&&Math.abs(r)<.3&&(o.h-=50,o.h<=0&&(score++))})}};
-    R=_=>{
-      rc=Math.max(0,rc-.02);fl=Math.max(0,fl-1);e=e.filter(o=>o.h>0);
-      h.fillStyle="#000";h.fillRect(0,0,320,240);
-      k.ArrowLeft&&(a-=.1);k.ArrowRight&&(a+=.1);m=.1;
-      (k.ArrowUp||k.w)&&(nx=x+M(a)*m,ny=y+N(a)*m,f(~~nx,~~ny)!="1"&&(x=nx,y=ny));
-      (k.ArrowDown||k.s)&&(nx=x-M(a)*m,ny=y-N(a)*m,f(~~nx,~~ny)!="1"&&(x=nx,y=ny));
-      // Better enemy spawning logic - GitHub hosted version only
-      if(k.ArrowUp||k.w||k.ArrowDown||k.s||k.ArrowLeft||k.ArrowRight){
-        const localRadius=5;let localEnemies=e.filter(o=>P(o.x-x,o.y-y)<localRadius);
-        if(localEnemies.length<5&&Math.random()<.02)
-          for(i=0;i<1+Math.floor(Math.random()*3);i++){
-            t=Math.random()*6.283,Rdist=1+Math.random()*2,
-            X=x+M(t)*Rdist,Y=y+N(t)*Rdist,
-            f(~~X,~~Y)=="0"&&e.push({x:X,y:Y,h:100})
-          }
-      }
-      if(Math.random()<.005&&am<25)am++;
-      e.forEach(o=>{
-        dx=x-o.x,dy=y-o.y,di=P(dx,dy);
-        di>0.2&&(nx=o.x+dx/di*(.0015+.003/di),ny=o.y+dy/di*(.0015+.003/di),f(~~nx,~~ny)!="1"&&(o.x=nx,o.y=ny));
-        di<.5&&(H--,fl=2,h.fillStyle="#800",h.fillRect(0,0,320,240))
-      });
-      w=[];
-      for(i=0;i<320;i++){
-        r=a+Math.atan((i-160)/160),rx=x,ry=y,s=N(r),c=M(r),d=0;
-        while(d<20&&f(~~rx,~~ry)!="1"){rx+=c*.1;ry+=s*.1;d+=.1}
-        d*=M(r-a);w[i]=d;h2=Math.min(240,240/d);g=Math.min(255,200/d)|0;
-        h.fillStyle="rgb("+g+","+g+","+g+")";h.fillRect(i,120-h2/2+rc*20,1,h2)
-      }
-      e.forEach(o=>{
-        d=P(o.x-x,o.y-y),r=T(o.y-y,o.x-x)-a;
-        r=r>Math.PI?r-2*Math.PI:r<-Math.PI?r+2*Math.PI:r;
-        if(Math.abs(r)<1.2){
-          sz=80/d,px=160+r*160;
-          if(px>=0&&px<320&&d<w[~~px]*1.1){
-            h.fillStyle=o.h>50?"#400":"#800";
-            h.fillRect(px-sz/2,120-sz/2+rc*20,sz,sz*1.5);
-            h.fillStyle="#f00";h.fillRect(px-sz/4,120-sz/2+rc*20,sz/8,sz/4);
-            h.fillRect(px+sz/4,120-sz/2+rc*20,sz/8,sz/4);
-            h.fillStyle="#900";h.fillRect(px-sz/2,120-sz/2-4+rc*20,sz,2);
-            h.fillStyle="#0f0";h.fillRect(px-sz/2,120-sz/2-4+rc*20,sz*(o.h/100),2)
-          }
-        }
-      });
-      h.fillStyle="#444";h.fillRect(140,180+rc*20,40,60);
-      fl&&(h.fillStyle="#FFA500",h.fillRect(140,160+rc*20,40,20));
-      h.fillStyle="#f00";h.fillRect(10,10,H,10);
-      h.fillStyle="#ff0";h.fillRect(10,25,am*4,5);
-      h.fillStyle="#fff";h.font="7px Arial";h.fillText("HP",10,7);
-      h.fillText("AMMO:"+am,10,28);h.fillText("SCORE:"+score,280,28); // score display, only in hosted version
-      h.textAlign="right";h.fillText("Made with <3 KuberWasTaken",315,235);
-      h.textAlign="left";
-      H>0?requestAnimationFrame(R):(h.fillStyle="#000a",h.fillRect(0,0,320,240),h.fillStyle="#f00",h.font="20px Arial",h.textAlign="center",h.fillText("GAME OVER",160,110),h.fillText("Score: "+score,160,150),h.fillText("Press F5",160,130),
-        // Only for the GitHub hosted version
-        document.getElementById('bgm').playbackRate=0.3)
-    };
-    R();
-    </script>
-  </body></html>
+</body>
+</html>
