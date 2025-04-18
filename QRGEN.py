@@ -9,14 +9,14 @@ import qrcode
 
 # Modified wrapper template to use gzip decompression instead of deflate
 WRAPPER_TEMPLATE = (
-    '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Game</title></head>'
-    '<body><script>(async function(){{'
+    '<title>Game</title>'
+    '<script>(async function(){{'
     'const c = Uint8Array.from(atob("{b64}"), c => c.charCodeAt(0));'
     'const ds = new DecompressionStream("gzip");'  # Changed to gzip
     'const d = new Response(c).body.pipeThrough(ds);'
     'const t = await new Response(d).text();'
     'document.open();document.write(t);document.close();'
-    '}})();</script></body></html>'
+    '}})();</script>'
 )
 
 def main():
@@ -52,6 +52,10 @@ def main():
     # Create a data URI from the self-extracting HTML
     data_uri = "data:text/html;base64," + base64.b64encode(final_html.encode('utf-8')).decode('ascii')
 
+    print(data_uri)
+    # print(qrcode.constants.ERROR_CORRECT_L)
+    # sys.exit(1)
+
     # Generate the QR code from the data URI
     qr = qrcode.QRCode(
         version=None,
@@ -65,7 +69,13 @@ def main():
     except ValueError as e:
         print("Warning: fitting QR code failed with error:", e)
         print("Forcing version 40 and using fit=False")
-        qr.version = 40
+        qr = qrcode.QRCode(
+            version=40,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(data_uri)
         qr.make(fit=False)
 
     img = qr.make_image(fill_color="black", back_color="white")
