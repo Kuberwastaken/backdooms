@@ -1,18 +1,24 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><title>THE BACKDOOMS</title><style>
     body{margin:0;overflow:hidden;background:#000;cursor:crosshair}canvas{width:100vw;height:100vh}
-    /* Mobile controls styles - hosted version only */
-    .m{position:fixed;bottom:0;left:0;width:100%;padding:10px;display:none;justify-content:space-between;background:#0006}
-    .b{width:50px;height:50px;background:#444;color:#fff;border:0;border-radius:50%;font-size:20px}
-    .f{background:#800;width:60px;height:60px}
-    .j{position:fixed;left:0;top:0;width:100%;height:100%;display:none;pointer-events:none}
-    .js{width:80px;height:80px;background:#fff3;border:2px solid #fff5;border-radius:50%;position:absolute;display:none}
-    .jk{width:40px;height:40px;background:#fff5;border-radius:50%;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
-    @media(pointer:coarse){.m{display:flex}.j{display:block}}
+    /* Mobile controls styles - improved version */
+    .m{position:fixed;bottom:20px;left:0;width:100%;padding:10px;display:none;justify-content:space-between;z-index:100}
+    .b{width:60px;height:60px;background:#444;color:#fff;border:0;border-radius:50%;font-size:20px;opacity:.7;transition:all .2s;box-shadow:0 0 15px rgba(255,255,255,0.2)}
+    .b:active{opacity:1;transform:scale(.95);box-shadow:0 0 20px rgba(255,165,0,0.4)}
+    .f{background:linear-gradient(45deg,#800,#f00);width:80px;height:80px;position:fixed;right:20px;bottom:20px;animation:pulse 2s infinite}
+    .j{position:fixed;left:0;top:0;width:100%;height:100%;touch-action:none;display:none}
+    .js{width:120px;height:120px;background:rgba(255,255,255,0.1);border:3px solid rgba(255,255,255,0.3);border-radius:50%;position:absolute;transition:all .2s;backdrop-filter:blur(5px);box-shadow:0 0 20px rgba(255,255,255,0.15)}
+    .js:active{opacity:1;border-color:rgba(255,255,255,0.5);box-shadow:0 0 30px rgba(255,255,255,0.3)}
+    .jk{width:50px;height:50px;background:rgba(255,255,255,0.7);border-radius:50%;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);transition:all .1s;box-shadow:0 0 10px rgba(255,255,255,0.3)}
+    @keyframes pulse {
+        0% { transform:scale(1); box-shadow:0 0 20px rgba(255,165,0,0.2) }
+        50% { transform:scale(1.05); box-shadow:0 0 30px rgba(255,165,0,0.4) }
+        100% { transform:scale(1); box-shadow:0 0 20px rgba(255,165,0,0.2) }
+    }
+    @media only screen and (pointer:coarse) and (hover:none){.m,.j{display:block}}
     </style></head><body><canvas id=c></canvas>
-    <!-- Mobile controls HTML - hosted version only -->
-    <div class=j id=j><div class=js id=js><div class=jk></div></div></div>
+    <!-- Mobile controls HTML - improved version -->
+    <div class=j id=j><div class=js id=js><div class=jk></div></div></div></div>
     <div class=m>
-      <div style="display:flex;gap:10px"><button class=b id=l>←</button><button class=b id=r>→</button></div>
       <button class="b f" id=s>FIRE</button>
     </div>
       // Only for the GitHub hosted version
@@ -31,44 +37,59 @@
     e=[{x:5,y:4,h:100},{x:4,y:5,h:100}],k={};
     onkeydown=e=>{k[e.key]=1};onkeyup=e=>{k[e.key]=0};
   
-    // Mobile controls setup - hosted version only
+    // Mobile controls setup - improved version
     if('ontouchstart'in window){
       let jx=0,jy=0,ji=null,sx=0,sy=0;
+      js.style.display='none';
+      
       j.ontouchstart=e=>{
+        e.preventDefault();
         let t=e.touches[0];
         ji=t.identifier;
         sx=t.clientX;
         sy=t.clientY;
         js.style.display='block';
-        js.style.left=sx-40+'px';
-        js.style.top=sy-40+'px';
+        js.style.left=(sx-60)+'px';
+        js.style.top=(sy-60)+'px';
       };
+      
       j.ontouchmove=e=>{
+        e.preventDefault();
         for(let t of e.touches)if(t.identifier===ji){
-          let dx=t.clientX-sx,dy=t.clientY-sy,d=P(dx,dy);
-          if(d>40)dx*=40/d,dy*=40/d;
-          jx=dx/40;jy=dy/40;
+          let dx=t.clientX-sx,dy=t.clientY-sy,
+              d=P(dx,dy);
+          if(d>60)dx*=60/d,dy*=60/d;
+          jx=dx/60;jy=dy/40;
+          let jkx=60+dx,jky=60+dy;
+          document.querySelector('.jk').style.transform=`translate(${dx}px,${dy}px)`;
           break;
         }
       };
+      
       j.ontouchend=e=>{
         if(!e.touches.length||!Array.from(e.touches).some(t=>t.identifier===ji)){
           ji=null;jx=0;jy=0;
           js.style.display='none';
+          document.querySelector('.jk').style.transform='translate(-50%,-50%)';
         }
       };
-      // Update game loop to use joystick values
-      let _R=R;R=_=>{
+
+      // Enhanced game loop for mobile
+      let _R=R;
+      R=_=>{
+        k.ArrowLeft=jx<-.3;
+        k.ArrowRight=jx>.3;
         k.ArrowUp=jy<-.3;
         k.ArrowDown=jy>.3;
         _R();
       };
-      j.style.pointerEvents='auto';
-      l.ontouchstart=_=>k.ArrowLeft=1;
-      l.ontouchend=_=>k.ArrowLeft=0;
-      r.ontouchstart=_=>k.ArrowRight=1;
-      r.ontouchend=_=>k.ArrowRight=0;
-      s.ontouchstart=onclick;
+
+      s.ontouchstart=e=>{e.preventDefault();onclick()};
+      s.ontouchend=e=>e.preventDefault();
+      
+      // Prevent default touch behaviors
+      document.body.style.touchAction='none';
+      document.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
     }
   
     onclick=_=>{if(am){am--;fl=2;rc=.2;h.fillStyle="#FFA500";h.fillRect(140,160,40,20);e.forEach(o=>{d=P(o.x-x,o.y-y),r=T(o.y-y,o.x-x)-a;r=r>Math.PI?r-2*Math.PI:r<-Math.PI?r+2*Math.PI:r;d<5&&Math.abs(r)<.3&&(o.h-=50,o.h<=0&&(score++))})}};
@@ -91,8 +112,8 @@
       if(Math.random()<.005&&am<25)am++;
       e.forEach(o=>{
         dx=x-o.x,dy=y-o.y,di=P(dx,dy);
-        di>0.2&&(nx=o.x+dx/di*.0015,ny=o.y+dy/di*.0015,f(~~nx,~~ny)!="1"&&(o.x=nx,o.y=ny));
-        di<.5&&(H--,fl=2)
+        di>0.2&&(nx=o.x+dx/di*(.0015+.003/di),ny=o.y+dy/di*(.0015+.003/di),f(~~nx,~~ny)!="1"&&(o.x=nx,o.y=ny));
+        di<.5&&(H--,fl=2,h.fillStyle="#800",h.fillRect(0,0,320,240))
       });
       w=[];
       for(i=0;i<320;i++){
