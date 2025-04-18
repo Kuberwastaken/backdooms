@@ -9,14 +9,9 @@ import qrcode
 
 # Modified wrapper template to use gzip decompression instead of deflate
 WRAPPER_TEMPLATE = (
-    '<title>Game</title>'
-    '<script>(async function(){{'
-    'const c = Uint8Array.from(atob("{b64}"), c => c.charCodeAt(0));'
-    'const ds = new DecompressionStream("gzip");'  # Changed to gzip
-    'const d = new Response(c).body.pipeThrough(ds);'
-    'const t = await new Response(d).text();'
-    'document.open();document.write(t);document.close();'
-    '}})();</script>'
+"""<script type="module">\
+document.open();document.write(await new Response(new Response(Uint8Array.from(atob("{b64}"), c => c.charCodeAt(0))).body.pipeThrough(new DecompressionStream("gzip"))).text());document.close();\
+</script>"""
 )
 
 def main():
@@ -53,8 +48,6 @@ def main():
     data_uri = "data:text/html;base64," + base64.b64encode(final_html.encode('utf-8')).decode('ascii')
 
     print(data_uri)
-    # print(qrcode.constants.ERROR_CORRECT_L)
-    # sys.exit(1)
 
     # Generate the QR code from the data URI
     qr = qrcode.QRCode(
