@@ -7,12 +7,21 @@ import sys
 import os
 import qrcode
 
-# Modified wrapper template to use gzip decompression instead of deflate
-WRAPPER_TEMPLATE = (
-"""<script type="module">\
-document.open();document.write(await new Response(new Response(Uint8Array.fromHex({bigint}n.toString(16))).body.pipeThrough(new DecompressionStream("gzip"))).text());document.close();\
-</script>"""
-)
+WRAPPER_TEMPLATE = """
+<script>
+(async(R,n,a)=>{{
+  while(n){{
+    a.push(Number(n&255n));
+    n>>=8n
+  }}
+  document.write(
+    await new R(
+      new R(new Uint8Array(a.reverse())).body.pipeThrough(new DecompressionStream("gzip"))
+    ).text()
+  )
+}})(Response,{bigint}n,[])
+</script>
+"""
 
 def main():
     if len(sys.argv) < 2:
@@ -35,7 +44,10 @@ def main():
     bigint = int.from_bytes(compressed)
 
     # Insert the compressed data into the self-extracting wrapper
-    final_html = WRAPPER_TEMPLATE.format(bigint=bigint)
+    self_extracting_html = WRAPPER_TEMPLATE.format(bigint=bigint)
+
+    # Strip leading whitespace
+    final_html = ''.join([line.strip() for line in self_extracting_html.split('\n')])
 
     # Check that the final self-extracting HTML is within the 3KB limit
     final_size = len(final_html.encode('utf-8'))
