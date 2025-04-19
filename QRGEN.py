@@ -10,7 +10,7 @@ import qrcode
 # Modified wrapper template to use gzip decompression instead of deflate
 WRAPPER_TEMPLATE = (
 """<script type="module">\
-document.open();document.write(await new Response(new Response(Uint8Array.from(atob("{b64}"), c => c.charCodeAt(0))).body.pipeThrough(new DecompressionStream("gzip"))).text());document.close();\
+document.open();document.write(await new Response(new Response(Uint8Array.fromHex({bigint}n.toString(16))).body.pipeThrough(new DecompressionStream("gzip"))).text());document.close();\
 </script>"""
 )
 
@@ -31,11 +31,11 @@ def main():
     compressor = zlib.compressobj(level=9, wbits=31)
     compressed = compressor.compress(html_data) + compressor.flush()
 
-    # Base64 encode the compressed data
-    b64_compressed = base64.b64encode(compressed).decode('ascii')
+    # Make a big integer with the compressed data
+    bigint = int.from_bytes(compressed)
 
     # Insert the compressed data into the self-extracting wrapper
-    final_html = WRAPPER_TEMPLATE.format(b64=b64_compressed)
+    final_html = WRAPPER_TEMPLATE.format(bigint=bigint)
 
     # Check that the final self-extracting HTML is within the 3KB limit
     final_size = len(final_html.encode('utf-8'))
@@ -45,7 +45,7 @@ def main():
         print(f"Final size: {final_size} bytes (within 3KB).")
 
     # Create a data URI from the self-extracting HTML
-    data_uri = "data:text/html;base64," + base64.b64encode(final_html.encode('utf-8')).decode('ascii')
+    data_uri = "data:text/html," + final_html
 
     print(data_uri)
 
