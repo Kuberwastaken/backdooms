@@ -64,6 +64,10 @@
     let jx=0,jy=0,ji=null,sx=0,sy=0;
     let isUsingMobile = false;
     let originalR;
+    // Add movement smoothing and sensitivity controls
+    let smoothJx = 0, smoothJy = 0;
+    let joystickSensitivity = 0.5; // Lower = less sensitive
+    let movementSmoothing = 0.3; // Higher = smoother but less responsive
     
     // Click/tap handler
     onclick=_=>{if(am){am--;fl=2;rc=.2;h.fillStyle="#FFA500";h.fillRect(140,160,40,20);e.forEach(o=>{d=P(o.x-x,o.y-y),r=T(o.y-y,o.x-x)-a;r=r>Math.PI?r-2*Math.PI:r<-Math.PI?r+2*Math.PI:r;d<5&&Math.abs(r)<.3&&(o.h-=50,o.h<=0&&(score++))})}};
@@ -140,10 +144,12 @@
       // Override with mobile-friendly version
       R = function() {
         // Map joystick position to controls
-        k.ArrowLeft = jx < -.3;
-        k.ArrowRight = jx > .3;
-        k.ArrowUp = jy < -.3;
-        k.ArrowDown = jy > .3;
+        smoothJx += (jx - smoothJx) * movementSmoothing;
+        smoothJy += (jy - smoothJy) * movementSmoothing;
+        k.ArrowLeft = smoothJx < -joystickSensitivity;
+        k.ArrowRight = smoothJx > joystickSensitivity;
+        k.ArrowUp = smoothJy < -joystickSensitivity;
+        k.ArrowDown = smoothJy > joystickSensitivity;
         originalR();
       };
       
