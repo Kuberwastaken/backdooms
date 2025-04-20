@@ -6,6 +6,7 @@ import base64
 import sys
 import os
 import qrcode
+import urllib.parse
 
 WRAPPER_TEMPLATE = """
 <script>
@@ -57,7 +58,7 @@ def main():
         print(f"Final size: {final_size} bytes (within 3KB).")
 
     # Create a data URI from the self-extracting HTML
-    data_uri = "data:text/html," + final_html
+    data_uri = "data:text/html," + urllib.parse.quote(final_html)
 
     print(data_uri)
 
