@@ -74,6 +74,9 @@ Example:
 python3 QRGEN.py EVEN-SMALLER-SLAMMER-BACKROOMS.html qrcode.png
 ```
 
+> **Note:** An alternative implementation using BigInt instead of Base64 for even smaller QR codes is available at [The BigInt Branch](https://github.com/Kuberwastaken/backdooms/tree/BigInt), though it has limited mobile browser compatibility.
+
+
 ### 2️⃣ Scan the QR Code
 Use a smartphone or QR scanner to open the game directly in a web browser.
 
@@ -145,6 +148,7 @@ It would make me EXTREMELY happy to see other QR games or even seeing better ver
 -  id Software for Developing DOOM
 - matttkc for putting this idea in my head 5 years ago
 - Toby Fox for the amazing music in Undertale, this game's GitHub hosted version uses an 8 bit version of Bonetrousle
+- The amazing contributers that continue to make backdooms even more insane
 
  Developed by **Kuber Mehta** :)
 
