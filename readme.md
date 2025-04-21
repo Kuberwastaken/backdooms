@@ -1,4 +1,4 @@
-<h1 align="center">The Backdooms: Running DOOM on a QR Code</h1>
+<h1 align="center">The Backdooms BigInt: Running DOOM on a QR Code</h1>
 
 
 <p align="center">
@@ -18,7 +18,9 @@
 
 **The Backdooms** is a compressed, self-extracting and infinitely generating HTML game inspired by DOOM 1993 and The Backrooms that can be launched and played in a web browser directly from a QR code.
 
-This project was a week-long study I performed (now slightly longer) designed to push the limits of QR code storage and compression, to demonstrate an innovative method of hosting lightweight web applications entirely within a QR code.
+This version uses the more effecient BigInt instead of Base64 to encode the game, this comes with significantly more space to work with but has problems with mobile compatibility.
+
+This project is a testament to push the limits of QR code storage and compression, to demonstrate an innovative method of hosting lightweight web applications entirely within a QR code.
 
 ---
 
@@ -145,6 +147,7 @@ It would make me EXTREMELY happy to see other QR games or even seeing better ver
 -  id Software for Developing DOOM
 - matttkc for putting this idea in my head 5 years ago
 - Toby Fox for the amazing music in Undertale, this game's GitHub hosted version uses an 8 bit version of Bonetrousle
+- The amazing contributers streching the limit of what's possible with compression and QR codes
 
- Developed by **Kuber Mehta** :)
+ Developed by **agusdallalba**, **notpushkin** and **Kuber Mehta** :)
 
