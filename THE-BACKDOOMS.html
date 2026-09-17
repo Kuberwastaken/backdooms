@@ -54,10 +54,10 @@
     
     M=Math.cos,N=Math.sin,P=Math.hypot,T=Math.atan2,A=Math.atan;
     c=document.getElementById("c");c.width=320,c.height=240,h=c.getContext("2d");
-    x=4,y=4,a=0,H=100,am=25,rc=0,fl=0,SEED=Math.random()*100,score=0;
+    x=4,y=4,a=0,H=100,am=25,rc=0,fl=0,SEED=Math.random()*100,score=0,startTime=Date.now();
     f=(i,j)=>(Math.abs(i-4)<4&&Math.abs(j-4)<4)?"0":((((i+1e3)%7)==3||((j+1e3)%7)==3)?"0":(n=N(i*12.9898+j*78.233+SEED)*43758.5453,
     n-=n|0,n<.05?"1":"0"));
-    e=[{x:5,y:4,h:100},{x:4,y:5,h:100}],k={};
+    e=[{x:7,y:7,h:100}],k={};
     onkeydown=e=>{k[e.key]=1};onkeyup=e=>{k[e.key]=0};
   
     // Define mobile variables
@@ -79,15 +79,14 @@
       k.ArrowLeft&&(a-=.1);k.ArrowRight&&(a+=.1);m=.1;
       (k.ArrowUp||k.w)&&(nx=x+M(a)*m,ny=y+N(a)*m,f(~~nx,~~ny)!="1"&&(x=nx,y=ny));
       (k.ArrowDown||k.s)&&(nx=x-M(a)*m,ny=y-N(a)*m,f(~~nx,~~ny)!="1"&&(x=nx,y=ny));
-      // Better enemy spawning logic
-      if(k.ArrowUp||k.w||k.ArrowDown||k.s||k.ArrowLeft||k.ArrowRight){
+      // Calm opening: one distant enemy, then a short grace period and paced single spawns.
+      if(Date.now()-startTime>12000&&(k.ArrowUp||k.w||k.ArrowDown||k.s||k.ArrowLeft||k.ArrowRight)){
         const localRadius=5;let localEnemies=e.filter(o=>P(o.x-x,o.y-y)<localRadius);
-        if(localEnemies.length<5&&Math.random()<.02)
-          for(i=0;i<1+Math.floor(Math.random()*3);i++){
-            t=Math.random()*6.283,Rdist=1+Math.random()*2,
-            X=x+M(t)*Rdist,Y=y+N(t)*Rdist,
-            f(~~X,~~Y)=="0"&&e.push({x:X,y:Y,h:100})
-          }
+        if(localEnemies.length<3&&Math.random()<.003){
+          t=Math.random()*6.283,Rdist=2.5+Math.random()*1.5,
+          X=x+M(t)*Rdist,Y=y+N(t)*Rdist,
+          f(~~X,~~Y)=="0"&&e.push({x:X,y:Y,h:100})
+        }
       }
       if(Math.random()<.005&&am<25)am++;
       e.forEach(o=>{
